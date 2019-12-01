@@ -18,19 +18,6 @@
   --nord15: #b48ead;
 }
 
-* {
-  margin: 0px;
-  padding: 0px;
-  outline: none;
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0px auto;
-  background-color: var(--nord0);
-  color: var(--nord6);
-}
-
 ::-webkit-scrollbar {
   width: 10px;
   background-color: var(--nord-1);
@@ -44,26 +31,56 @@ body {
   background: var(--nord3);
 }
 
-ul {
+* {
+  margin: 0px;
+  padding: 0px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0px auto;
+  background-color: var(--nord0);
+  color: var(--nord6);
+}
+
+a {
+  display: block;
+  margin-left: -9px;
+  padding: 3px 8px;
+  white-space: nowrap;
+  color: var(--nord6);
+  text-decoration: none;
+}
+
+a:hover {
+  background-color: var(--nord4);
+  color: var(--nord0);
+}
+
+img {
+  margin-bottom: -3px;
+  padding-right: 3px;
+}
+
+#bookmarks ul {
+  margin-left: 25px;
   list-style: none;
 }
 
-body > ul > li {
+#bookmarks > ul {
   display: inline-block;
-  width: 280px;
+  width: 300px;
   height: 400px;
   overflow-x: hidden;
   overflow-y: auto;
   margin: 4px 5px;
   padding: 3px 5px 0px 16px;
   border: 1px solid var(--nord3);
+  cursor: pointer;
 }
 
-body > ul > li ul {
-  margin-left: 20px;
-}
-
-ul li h2 {
+#bookmarks ul li h2 {
   font-size: 12pt;
   font-weight: normal;
   margin-left: -9px;
@@ -74,21 +91,11 @@ ul li h2 {
   background-position: left center;
   background-size: 14px;
 }
-ul li a {
-  display: block;
-  margin-left: -9px;
-  padding: 3px 8px;
-  white-space: nowrap;
-  color: var(--nord6);
-  text-decoration: none;
-}
 
-ul li a:hover {
-  background-color: var(--nord4);
-  color: var(--nord0);
-}
+/* .hide li:not(:first-child) {
+  filter: blur(3px);
+} */
 
-ul li a img {
-  margin-bottom: -3px;
-  padding-right: 3px;
+.hide li:not(:first-child) {
+  display: none;
 }
