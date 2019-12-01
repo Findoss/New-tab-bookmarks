@@ -7,7 +7,13 @@
   "chrome_url_overrides": {
     "newtab": "new_tab/index.html"
   },
-  "permissions": ["bookmarks", "chrome://favicon/*"],
+  "permissions": [
+    "history",
+    "bookmarks",
+    "tabs",
+    "sessions",
+    "chrome://favicon/*"
+  ],
   "icons": {
     "16": "images/icons/bookmark-16.png",
     "32": "images/icons/bookmark-32.png",
