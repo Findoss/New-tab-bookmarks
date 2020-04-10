@@ -74,9 +74,8 @@ function templateFolder(i, slot) {
       <li>
         <h2 class="folder">
           ${shortenString(i.title, 35)}
-          
+          <div class="options"></div>
         </h2>
-        <div class="options"></div>
         ${slot}
       </li>
     </ul>
@@ -133,7 +132,6 @@ function render(bookmarks, deviceBookmarks, history, filter) {
   html += renderHistory(history, filter);
 
   document.getElementById(ELEMENT_ID).innerHTML = html;
-  addEventListeners();
 }
 
 function toggleShow(e) {
@@ -142,12 +140,28 @@ function toggleShow(e) {
   e.target.parentElement.parentElement.classList.toggle("hide");
 }
 
-function openAll(data) {
-  console.log("openAll tabs");
+function options(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  openAll(e);
 }
 
-function search(data) {
-  start(data.target.value);
+function openAll(e) {
+  const nodes = e.target.parentNode.parentNode.parentNode.children;
+  [...nodes].forEach(node => {
+    const elements = node.getElementsByTagName("a");
+    if (elements) {
+      [...elements].forEach(element => {
+        window.open(element.getAttribute("href"), "_blank");
+      });
+    }
+  });
+}
+
+function search(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  start(e.target.value);
 }
 
 function addEventListeners() {
@@ -155,8 +169,8 @@ function addEventListeners() {
     link.addEventListener("click", toggleShow);
   });
 
-  Array.from(document.querySelectorAll(".open-all")).forEach(link => {
-    link.addEventListener("click", openAll);
+  Array.from(document.querySelectorAll(".options")).forEach(link => {
+    link.addEventListener("click", options);
   });
 
   document.getElementById("search").addEventListener("input", search);
@@ -168,6 +182,7 @@ async function start(filter = "") {
   const history = await getHistory();
 
   render(bookmarks, deviceTabs, history, filter);
+  addEventListeners();
 }
 
 document.addEventListener("DOMContentLoaded", start());
