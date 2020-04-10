@@ -70,58 +70,67 @@ function templateBookmark(i) {
 
 function templateFolder(i, slot) {
   return `
-    <ul>
+    <ul class="">
       <li>
         <h2 class="folder">
           ${shortenString(i.title, 35)}
+          
         </h2>
+        <div class="options"></div>
         ${slot}
       </li>
     </ul>
   `;
 }
 
-function renderBookmark(node, html) {
+function renderBookmark(node, html, filter) {
   let tmp_html = "";
+
   node.forEach(node => {
     if (node.children) {
-      html += templateFolder(node, renderBookmark(node.children, tmp_html));
+      html += templateFolder(node, renderBookmark(node.children, tmp_html, filter));
     }
     if (node.url) {
-      html += templateBookmark(node);
+      if (new RegExp(filter, "gi").test(node.title)) {
+        html += templateBookmark(node);
+      }
     }
   });
   return html;
 }
 
-function renderDevice(node) {
+function renderDevice(node, filter) {
   let html = "";
-  node.sessions[0].window.tabs.forEach(node => {
-    html += templateBookmark(node);
-  });
+  node.sessions[0].window.tabs
+    .filter(node => new RegExp(filter, "gi").test(node.title))
+    .forEach(node => {
+      html += templateBookmark(node);
+    });
   return templateFolder({ title: node.deviceName }, html);
 }
 
-function renderHistory(node) {
+function renderHistory(node, filter) {
   let html = "";
-  node.forEach(node => {
-    html += templateBookmark(node);
-  });
+  node
+    .filter(node => new RegExp(filter, "gi").test(node.title))
+    .forEach(node => {
+      html += templateBookmark(node);
+    });
   return templateFolder({ title: "History" }, html);
 }
 
-function render(bookmarks, deviceBookmarks, history) {
+function render(bookmarks, deviceBookmarks, history, filter) {
   let html = "";
 
   bookmarks.forEach(bookmarks => {
-    if (bookmarks.children) html += renderBookmark(bookmarks.children, "");
+    if (bookmarks.children) html += renderBookmark(bookmarks.children, "", filter);
   });
 
   deviceBookmarks.forEach(device => {
-    html += renderDevice(device);
+    html += renderDevice(device, filter);
   });
 
-  html += renderHistory(history);
+  html += renderHistory(history, filter);
 
   document.getElementById(ELEMENT_ID).innerHTML = html;
   addEventListeners();
@@ -133,18 +142,32 @@ function toggleShow(e) {
   e.target.parentElement.parentElement.classList.toggle("hide");
 }
 
+function openAll(data) {
+  console.log("openAll tabs");
+}
+
+function search(data) {
+  start(data.target.value);
+}
+
 function addEventListeners() {
   Array.from(document.querySelectorAll(".folder")).forEach(link => {
     link.addEventListener("click", toggleShow);
   });
+
+  Array.from(document.querySelectorAll(".open-all")).forEach(link => {
+    link.addEventListener("click", openAll);
+  });
+
+  document.getElementById("search").addEventListener("input", search);
 }
 
-async function start() {
+async function start(filter = "") {
   const bookmarks = await getBookmarks();
   const deviceTabs = await getDeviceTabs();
   const history = await getHistory();
 
-  render(bookmarks, deviceTabs, history);
+  render(bookmarks, deviceTabs, history, filter);
 }
 
-document.addEventListener("DOMContentLoaded", start);
+document.addEventListener("DOMContentLoaded", start());

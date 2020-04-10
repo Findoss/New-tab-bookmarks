@@ -1,11 +1,11 @@
 {
   "manifest_version": 2,
-  "name": "New Tab with Bookmarks",
+  "name": "New tab with bookmarks",
   "description": "Displays all bookmarks in the new tab page",
   "version": "1.0.2",
 
   "chrome_url_overrides": {
-    "newtab": "new_tab/index.html"
+    "newtab": "index.html"
   },
   "permissions": [
     "history",
